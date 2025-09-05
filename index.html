@@ -61,12 +61,12 @@
     </div>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/index.min.js';
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.43.4/dist/esm/supabase.browser.js';
 
         // --- Configuración de Supabase ---
-        // Debes reemplazar estas variables con la URL y la clave de tu proyecto de Supabase.
-        const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co'; // Ejemplo: 'https://xyz.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE'; // Ejemplo: 'eyJhbGciOiJIUzI1NiI...'
+        // Tus credenciales de Supabase
+        const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
         // Inicializa el cliente de Supabase.
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
