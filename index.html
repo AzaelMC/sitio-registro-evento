@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Evento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 90%;
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 md:p-8 bg-gray-100">
+
+    <div class="container bg-white p-8 rounded-2xl shadow-xl space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Registro de Evento</h1>
+            <p class="text-gray-600">Completa el formulario para asegurar tu lugar.</p>
+        </div>
+
+        <form id="registration-form" class="space-y-4">
+            <div>
+                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+            </div>
+            <div>
+                <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+            </div>
+            <div>
+                <label for="correo" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+            </div>
+            <div>
+                <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono (Opcional)</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+            </div>
+            <button type="submit" id="submit-button"
+                    class="w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                Registrarse
+            </button>
+        </form>
+
+        <!-- Mensaje de estado -->
+        <div id="status-message" class="text-center mt-4 text-sm font-medium" style="display: none;"></div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/index.min.js';
+
+        // --- Configuración de Supabase ---
+        // Debes reemplazar estas variables con la URL y la clave de tu proyecto de Supabase.
+        const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co'; // Ejemplo: 'https://xyz.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE'; // Ejemplo: 'eyJhbGciOiJIUzI1NiI...'
+
+        // Inicializa el cliente de Supabase.
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- Lógica del formulario ---
+        const form = document.getElementById('registration-form');
+        const statusMessage = document.getElementById('status-message');
+        const submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            submitButton.disabled = true;
+            submitButton.textContent = 'Registrando...';
+            statusMessage.style.display = 'block';
+            statusMessage.className = 'text-center mt-4 text-sm font-medium text-gray-600';
+            statusMessage.textContent = 'Procesando tu registro, por favor espera...';
+
+            const formData = new FormData(form);
+            const data = {
+                nombre: formData.get('nombre'),
+                apellido: formData.get('apellido'),
+                correo: formData.get('correo'),
+                telefono: formData.get('telefono')
+            };
+
+            // Intenta insertar los datos en la tabla 'registros' de Supabase
+            const { error } = await supabase
+                .from('registros')
+                .insert([data]);
+
+            submitButton.disabled = false;
+            submitButton.textContent = 'Registrarse';
+
+            if (error) {
+                console.error('Error al registrar:', error);
+                statusMessage.className = 'text-center mt-4 text-sm font-medium text-red-500';
+                if (error.code === '23505') {
+                    statusMessage.textContent = 'Este correo electrónico ya está registrado.';
+                } else {
+                    statusMessage.textContent = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
+                }
+            } else {
+                statusMessage.className = 'text-center mt-4 text-sm font-medium text-green-600';
+                statusMessage.textContent = '¡Registro exitoso! Gracias por registrarte.';
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
