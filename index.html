@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Evento</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -33,6 +33,7 @@
             width: 100%;
             max-width: 500px;
             backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-out;
         }
 
         .title {
@@ -64,6 +65,10 @@
             margin-bottom: 0.5rem;
         }
 
+        .form-label .required {
+            color: #ef4444;
+        }
+
         .form-input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -85,6 +90,14 @@
             color: #9ca3af;
         }
 
+        .form-input:valid {
+            border-color: #10b981;
+        }
+
+        .form-input:invalid:not(:placeholder-shown) {
+            border-color: #ef4444;
+        }
+
         .submit-button {
             width: 100%;
             background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
@@ -98,6 +111,9 @@
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.025em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .submit-button:hover:not(:disabled) {
@@ -120,12 +136,16 @@
             font-size: 0.875rem;
             font-weight: 500;
             display: none;
+            animation: slideIn 0.3s ease-out;
         }
 
         .status-loading {
             background: #f3f4f6;
             color: #6b7280;
             border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .status-success {
@@ -140,6 +160,23 @@
             border: 1px solid #fecaca;
         }
 
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
         /* Animaciones */
         @keyframes fadeIn {
             from {
@@ -152,23 +189,20 @@
             }
         }
 
-        .container {
-            animation: fadeIn 0.5s ease-out;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .form-input:focus {
-            animation: inputFocus 0.2s ease-out;
-        }
-
-        @keyframes inputFocus {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.02);
-            }
-            100% {
-                transform: scale(1);
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
@@ -202,34 +236,36 @@
             }
         }
 
-        /* Efectos adicionales */
-        .form-input:valid {
-            border-color: #10b981;
+        /* Estado de conexión */
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
         }
 
-        .form-input:invalid:not(:placeholder-shown) {
-            border-color: #ef4444;
+        .connection-status.connected {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        .connection-status.disconnected {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
         }
     </style>
 </head>
 <body>
+    <div class="connection-status" id="connection-status"></div>
+    
     <div class="container">
         <div class="title">
             <h1>Registro de Evento</h1>
@@ -238,23 +274,65 @@
 
         <form id="registration-form">
             <div class="form-group">
-                <label for="nombre" class="form-label">Nombre *</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required class="form-input">
+                <label for="nombre" class="form-label">
+                    Nombre <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="nombre" 
+                    name="nombre" 
+                    placeholder="Ingresa tu nombre" 
+                    required 
+                    class="form-input"
+                    minlength="2"
+                    maxlength="50"
+                >
             </div>
             
             <div class="form-group">
-                <label for="apellido" class="form-label">Apellido *</label>
-                <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required class="form-input">
+                <label for="apellido" class="form-label">
+                    Apellido <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="apellido" 
+                    name="apellido" 
+                    placeholder="Ingresa tu apellido" 
+                    required 
+                    class="form-input"
+                    minlength="2"
+                    maxlength="50"
+                >
             </div>
             
             <div class="form-group">
-                <label for="correo" class="form-label">Correo Electrónico *</label>
-                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="form-input">
+                <label for="correo" class="form-label">
+                    Correo Electrónico <span class="required">*</span>
+                </label>
+                <input 
+                    type="email" 
+                    id="correo" 
+                    name="correo" 
+                    placeholder="ejemplo@correo.com" 
+                    required 
+                    class="form-input"
+                    maxlength="100"
+                >
             </div>
             
             <div class="form-group">
-                <label for="telefono" class="form-label">Teléfono (Opcional)</label>
-                <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678" class="form-input">
+                <label for="telefono" class="form-label">
+                    Teléfono (Opcional)
+                </label>
+                <input 
+                    type="tel" 
+                    id="telefono" 
+                    name="telefono" 
+                    placeholder="Ej. +52 55 1234 5678" 
+                    class="form-input"
+                    pattern="[+]?[0-9\s\-\(\)]+"
+                    maxlength="20"
+                >
             </div>
             
             <button type="submit" id="submit-button" class="submit-button">
@@ -265,37 +343,79 @@
         <div id="status-message" class="status-message"></div>
     </div>
 
-    <!-- Cargar Supabase desde CDN alternativa -->
+    <!-- Cargar Supabase desde CDN -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <script>
+        // Verificar que Supabase esté cargado
+        if (typeof window.supabase === 'undefined') {
+            console.error('Supabase no se pudo cargar. Verifica tu conexión a internet.');
+            document.getElementById('status-message').style.display = 'block';
+            document.getElementById('status-message').className = 'status-message status-error';
+            document.getElementById('status-message').textContent = 'Error al cargar recursos. Por favor, recarga la página.';
+        }
+
         // --- Configuración de Supabase ---
-        // Tus credenciales de Supabase
         const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
-        // Inicializa el cliente de Supabase usando la variable global
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient = null;
 
-        // --- Lógica del formulario ---
+        // Inicializar Supabase de manera segura
+        try {
+            if (window.supabase && window.supabase.createClient) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase inicializado correctamente');
+            } else {
+                throw new Error('Supabase no está disponible');
+            }
+        } catch (error) {
+            console.error('Error al inicializar Supabase:', error);
+            document.getElementById('status-message').style.display = 'block';
+            document.getElementById('status-message').className = 'status-message status-error';
+            document.getElementById('status-message').textContent = 'Error de configuración. Contacta al administrador.';
+        }
+
+        // --- Funciones auxiliares ---
         const form = document.getElementById('registration-form');
         const statusMessage = document.getElementById('status-message');
         const submitButton = document.getElementById('submit-button');
+        const connectionStatus = document.getElementById('connection-status');
 
         // Función para mostrar mensajes
         function showMessage(message, type = 'success') {
-            const statusMessage = document.getElementById('status-message');
             statusMessage.style.display = 'block';
             statusMessage.className = `status-message status-${type}`;
-            statusMessage.textContent = message;
+            
+            if (type === 'loading') {
+                statusMessage.innerHTML = `<span class="loading-spinner"></span>${message}`;
+            } else {
+                statusMessage.textContent = message;
+            }
+
+            // Auto-ocultar mensajes de éxito después de 5 segundos
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
         }
 
-        // Función para mostrar estado de carga
-        function showLoading(message) {
-            const statusMessage = document.getElementById('status-message');
-            statusMessage.style.display = 'block';
-            statusMessage.className = 'status-message status-loading';
-            statusMessage.innerHTML = `<span class="loading-spinner"></span>${message}`;
+        // Función para mostrar estado de conexión
+        function showConnectionStatus(connected) {
+            connectionStatus.style.display = 'block';
+            if (connected) {
+                connectionStatus.className = 'connection-status connected';
+                connectionStatus.textContent = '✓ Conectado a la base de datos';
+            } else {
+                connectionStatus.className = 'connection-status disconnected';
+                connectionStatus.textContent = '✗ Sin conexión a la base de datos';
+            }
+            
+            // Ocultar después de 3 segundos
+            setTimeout(() => {
+                connectionStatus.style.display = 'none';
+            }, 3000);
         }
 
         // Función para validar email
@@ -304,14 +424,29 @@
             return re.test(email);
         }
 
+        // Función para validar teléfono (opcional)
+        function validatePhone(phone) {
+            if (!phone) return true; // Es opcional
+            const re = /^[+]?[0-9\s\-\(\)]+$/;
+            return re.test(phone) && phone.replace(/\D/g, '').length >= 7;
+        }
+
+        // --- Manejo del formulario ---
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Verificar que Supabase esté inicializado
+            if (!supabaseClient) {
+                showMessage('Error de configuración. Por favor, recarga la página.', 'error');
+                return;
+            }
 
             // Deshabilitar botón y mostrar estado de carga
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="loading-spinner"></span>Registrando...';
-            showLoading('Procesando tu registro, por favor espera...');
+            showMessage('Procesando tu registro...', 'loading');
 
+            // Obtener y limpiar datos del formulario
             const formData = new FormData(form);
             const data = {
                 nombre: formData.get('nombre').trim(),
@@ -321,11 +456,18 @@
                 fecha_registro: new Date().toISOString()
             };
 
-            // Validación básica
+            // Validaciones
             if (!data.nombre || !data.apellido || !data.correo) {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Registrarse';
                 showMessage('Por favor completa todos los campos obligatorios.', 'error');
+                return;
+            }
+
+            if (data.nombre.length < 2 || data.apellido.length < 2) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Registrarse';
+                showMessage('El nombre y apellido deben tener al menos 2 caracteres.', 'error');
                 return;
             }
 
@@ -336,23 +478,44 @@
                 return;
             }
 
+            if (data.telefono && !validatePhone(data.telefono)) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Registrarse';
+                showMessage('Por favor ingresa un número de teléfono válido.', 'error');
+                return;
+            }
+
             try {
-                // Intentar insertar los datos en la tabla 'registros' de Supabase
-                const { error } = await supabase
+                // Primero verificar si el correo ya existe
+                const { data: existingUser, error: checkError } = await supabaseClient
+                    .from('registros')
+                    .select('correo')
+                    .eq('correo', data.correo)
+                    .single();
+
+                if (existingUser) {
+                    showMessage('Este correo electrónico ya está registrado.', 'warning');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Registrarse';
+                    return;
+                }
+
+                // Si no existe, proceder con el registro
+                const { error: insertError } = await supabaseClient
                     .from('registros')
                     .insert([data]);
 
-                if (error) {
-                    console.error('Error al registrar:', error);
-                    let errorMessage = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
+                if (insertError) {
+                    console.error('Error al registrar:', insertError);
                     
-                    // Manejar diferentes tipos de error
-                    if (error.code === '23505') {
+                    let errorMessage = 'Hubo un error en el registro. Por favor, intenta de nuevo.';
+                    
+                    if (insertError.code === '42P01') {
+                        errorMessage = 'La tabla de registros no existe. Contacta al administrador.';
+                    } else if (insertError.code === '23505' || insertError.message?.includes('duplicate')) {
                         errorMessage = 'Este correo electrónico ya está registrado.';
-                    } else if (error.code === '42P01') {
-                        errorMessage = 'Error de configuración de la base de datos. Contacta al administrador.';
-                    } else if (error.message.includes('duplicate key')) {
-                        errorMessage = 'Este correo electrónico ya está registrado.';
+                    } else if (insertError.message?.includes('network')) {
+                        errorMessage = 'Error de conexión. Verifica tu internet.';
                     }
                     
                     showMessage(errorMessage, 'error');
@@ -360,10 +523,10 @@
                     showMessage('¡Registro exitoso! Gracias por registrarte.', 'success');
                     form.reset();
                     
-                    // Ocultar mensaje después de 5 segundos
-                    setTimeout(() => {
-                        document.getElementById('status-message').style.display = 'none';
-                    }, 5000);
+                    // Opcional: Redirigir después del registro exitoso
+                    // setTimeout(() => {
+                    //     window.location.href = '/gracias';
+                    // }, 2000);
                 }
             } catch (err) {
                 console.error('Error de conexión:', err);
@@ -375,36 +538,51 @@
             }
         });
 
-        // Inicializar cuando se carga la página
-        window.addEventListener('load', async () => {
-            showLoading('Cargando sistema...');
-            
-            // Cargar Supabase
-            const loaded = await loadSupabase();
-            
-            if (loaded && window.supabase) {
-                try {
-                    // Inicializar cliente de Supabase
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    
-                    // Verificar conexión
-                    const { data, error } = await supabase
-                        .from('registros')
-                        .select('count', { count: 'exact', head: true });
-                    
-                    document.getElementById('status-message').style.display = 'none';
-                    console.log('Conexión a Supabase exitosa');
-                    
-                    if (error && error.code === '42P01') {
-                        showMessage('La tabla "registros" no existe. Contacta al administrador.', 'error');
-                    }
-                } catch (err) {
-                    console.warn('Error al verificar conexión:', err);
-                    showMessage('Error de conexión a la base de datos.', 'error');
-                }
-            } else {
-                showMessage('Error: No se pudo cargar Supabase. Revisa tu conexión a internet.', 'error');
+        // Verificar conexión con Supabase al cargar la página
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (!supabaseClient) {
+                showConnectionStatus(false);
+                return;
             }
+
+            try {
+                // Intentar hacer una consulta simple para verificar la conexión
+                const { error } = await supabaseClient
+                    .from('registros')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    if (error.code === '42P01') {
+                        console.warn('La tabla "registros" no existe en Supabase.');
+                        showMessage('Configuración pendiente. Contacta al administrador.', 'warning');
+                        showConnectionStatus(false);
+                    } else {
+                        console.warn('Error al verificar la conexión:', error);
+                        showConnectionStatus(false);
+                    }
+                } else {
+                    console.log('Conexión con Supabase verificada exitosamente');
+                    showConnectionStatus(true);
+                }
+            } catch (err) {
+                console.warn('No se pudo verificar la conexión con Supabase:', err);
+                showConnectionStatus(false);
+            }
+        });
+
+        // Prevenir el envío del formulario con Enter en campos individuales
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.target.type !== 'submit') {
+                    e.preventDefault();
+                    const nextInput = form.elements[Array.from(form.elements).indexOf(e.target) + 1];
+                    if (nextInput) {
+                        nextInput.focus();
+                    } else {
+                        submitButton.click();
+                    }
+                }
+            });
         });
     </script>
 </body>
