@@ -56,21 +56,22 @@
             </button>
         </form>
 
-       
+        <!-- Mensaje de estado -->
         <div id="status-message" class="text-center mt-4 text-sm font-medium" style="display: none;"></div>
     </div>
 
     <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/supabase-js.min.js';
 
-      
+        // --- Configuración de Supabase ---
+        // Tus credenciales de Supabase
         const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
-   
+        // Inicializa el cliente de Supabase.
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-     
+        // --- Lógica del formulario ---
         const form = document.getElementById('registration-form');
         const statusMessage = document.getElementById('status-message');
         const submitButton = document.getElementById('submit-button');
@@ -92,7 +93,7 @@
                 telefono: formData.get('telefono')
             };
 
-           
+            // Intenta insertar los datos en la tabla 'registros' de Supabase
             const { error } = await supabase
                 .from('registros')
                 .insert([data]);
