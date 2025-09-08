@@ -60,25 +60,40 @@
         <div id="status-message" class="text-center mt-4 text-sm font-medium" style="display: none;"></div>
     </div>
 
-    <script type="module">
-        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.8/dist/supabase-js.min.js';
-
+    <!-- Cargar Supabase desde CDN alternativa -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
         // --- Configuración de Supabase ---
         // Tus credenciales de Supabase
         const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
-        // Inicializa el cliente de Supabase.
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inicializa el cliente de Supabase usando la variable global
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // --- Lógica del formulario ---
         const form = document.getElementById('registration-form');
         const statusMessage = document.getElementById('status-message');
         const submitButton = document.getElementById('submit-button');
 
+        // Función para mostrar mensajes
+        function showMessage(message, isError = false) {
+            statusMessage.style.display = 'block';
+            statusMessage.className = `text-center mt-4 text-sm font-medium ${isError ? 'text-red-500' : 'text-green-600'}`;
+            statusMessage.textContent = message;
+        }
+
+        // Función para validar email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Deshabilitar botón y mostrar estado de carga
             submitButton.disabled = true;
             submitButton.textContent = 'Registrando...';
             statusMessage.style.display = 'block';
@@ -87,32 +102,79 @@
 
             const formData = new FormData(form);
             const data = {
-                nombre: formData.get('nombre'),
-                apellido: formData.get('apellido'),
-                correo: formData.get('correo'),
-                telefono: formData.get('telefono')
+                nombre: formData.get('nombre').trim(),
+                apellido: formData.get('apellido').trim(),
+                correo: formData.get('correo').trim().toLowerCase(),
+                telefono: formData.get('telefono') ? formData.get('telefono').trim() : null,
+                fecha_registro: new Date().toISOString()
             };
 
-            // Intenta insertar los datos en la tabla 'registros' de Supabase
-            const { error } = await supabase
-                .from('registros')
-                .insert([data]);
+            // Validación básica
+            if (!data.nombre || !data.apellido || !data.correo) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Registrarse';
+                showMessage('Por favor completa todos los campos obligatorios.', true);
+                return;
+            }
 
-            submitButton.disabled = false;
-            submitButton.textContent = 'Registrarse';
+            if (!validateEmail(data.correo)) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Registrarse';
+                showMessage('Por favor ingresa un correo electrónico válido.', true);
+                return;
+            }
 
-            if (error) {
-                console.error('Error al registrar:', error);
-                statusMessage.className = 'text-center mt-4 text-sm font-medium text-red-500';
-                if (error.code === '23505') {
-                    statusMessage.textContent = 'Este correo electrónico ya está registrado.';
+            try {
+                // Intentar insertar los datos en la tabla 'registros' de Supabase
+                const { error } = await supabase
+                    .from('registros')
+                    .insert([data]);
+
+                if (error) {
+                    console.error('Error al registrar:', error);
+                    let errorMessage = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
+                    
+                    // Manejar diferentes tipos de error
+                    if (error.code === '23505') {
+                        errorMessage = 'Este correo electrónico ya está registrado.';
+                    } else if (error.code === '42P01') {
+                        errorMessage = 'Error de configuración de la base de datos. Contacta al administrador.';
+                    } else if (error.message.includes('duplicate key')) {
+                        errorMessage = 'Este correo electrónico ya está registrado.';
+                    }
+                    
+                    showMessage(errorMessage, 'error');
                 } else {
-                    statusMessage.textContent = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
+                    showMessage('¡Registro exitoso! Gracias por registrarte.', 'success');
+                    form.reset();
+                    
+                    // Ocultar mensaje después de 5 segundos
+                    setTimeout(() => {
+                        document.getElementById('status-message').style.display = 'none';
+                    }, 5000);
                 }
-            } else {
-                statusMessage.className = 'text-center mt-4 text-sm font-medium text-green-600';
-                statusMessage.textContent = '¡Registro exitoso! Gracias por registrarte.';
-                form.reset();
+            } catch (err) {
+                console.error('Error de conexión:', err);
+                showMessage('Error de conexión. Verifica tu internet e intenta nuevamente.', 'error');
+            } finally {
+                // Rehabilitar botón
+                submitButton.disabled = false;
+                submitButton.textContent = 'Registrarse';
+            }
+        });
+
+        // Verificar conexión con Supabase al cargar la página
+        window.addEventListener('load', async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('registros')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error && error.code === '42P01') {
+                    console.warn('La tabla "registros" no existe. Asegúrate de crearla en Supabase.');
+                }
+            } catch (err) {
+                console.warn('No se pudo verificar la conexión con Supabase:', err);
             }
         });
     </script>
