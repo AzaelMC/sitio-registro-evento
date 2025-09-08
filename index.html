@@ -375,18 +375,35 @@
             }
         });
 
-        // Verificar conexión con Supabase al cargar la página
+        // Inicializar cuando se carga la página
         window.addEventListener('load', async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('registros')
-                    .select('count', { count: 'exact', head: true });
-                
-                if (error && error.code === '42P01') {
-                    console.warn('La tabla "registros" no existe. Asegúrate de crearla en Supabase.');
+            showLoading('Cargando sistema...');
+            
+            // Cargar Supabase
+            const loaded = await loadSupabase();
+            
+            if (loaded && window.supabase) {
+                try {
+                    // Inicializar cliente de Supabase
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    
+                    // Verificar conexión
+                    const { data, error } = await supabase
+                        .from('registros')
+                        .select('count', { count: 'exact', head: true });
+                    
+                    document.getElementById('status-message').style.display = 'none';
+                    console.log('Conexión a Supabase exitosa');
+                    
+                    if (error && error.code === '42P01') {
+                        showMessage('La tabla "registros" no existe. Contacta al administrador.', 'error');
+                    }
+                } catch (err) {
+                    console.warn('Error al verificar conexión:', err);
+                    showMessage('Error de conexión a la base de datos.', 'error');
                 }
-            } catch (err) {
-                console.warn('No se pudo verificar la conexión con Supabase:', err);
+            } else {
+                showMessage('Error: No se pudo cargar Supabase. Revisa tu conexión a internet.', 'error');
             }
         });
     </script>
