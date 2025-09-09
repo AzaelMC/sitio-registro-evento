@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +6,7 @@
     <title>Registro de Evento</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -23,6 +22,13 @@
             justify-content: center;
             padding: 1rem;
             line-height: 1.6;
+            animation: gradient-flow 15s ease infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -33,23 +39,7 @@
             width: 100%;
             max-width: 500px;
             backdrop-filter: blur(10px);
-        }
-
-        .title {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .title h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-        }
-
-        .title p {
-            color: #6b7280;
-            font-size: 1rem;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .form-group {
@@ -79,6 +69,7 @@
             border-color: #3b82f6;
             background: white;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            animation: inputFocus 0.2s ease-out;
         }
 
         .form-input::placeholder {
@@ -87,8 +78,8 @@
 
         .submit-button {
             width: 100%;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            color: white;
+            background: #764BA2;
+            color: #ffffff;
             padding: 0.875rem 1rem;
             border: none;
             border-radius: 0.5rem;
@@ -98,12 +89,13 @@
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.025em;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .submit-button:hover:not(:disabled) {
-            background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+            background: #633b8a;
             transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .submit-button:disabled {
@@ -152,14 +144,6 @@
             }
         }
 
-        .container {
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .form-input:focus {
-            animation: inputFocus 0.2s ease-out;
-        }
-
         @keyframes inputFocus {
             0% {
                 transform: scale(1);
@@ -179,10 +163,6 @@
                 margin: 1rem;
             }
 
-            .title h1 {
-                font-size: 1.75rem;
-            }
-
             .form-input {
                 padding: 0.625rem 0.875rem;
             }
@@ -195,10 +175,6 @@
         @media (max-width: 480px) {
             .container {
                 padding: 1rem;
-            }
-
-            .title h1 {
-                font-size: 1.5rem;
             }
         }
 
@@ -227,13 +203,29 @@
                 transform: rotate(360deg);
             }
         }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Se aumentó el tamaño del logo */
+        .logo {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">
-            <h1>Registro de Evento</h1>
-            <p>Completa el formulario para asegurar tu lugar.</p>
+        <div class="logo-container">
+             <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del evento" class="logo">
+             <p class="text-gray-600">Completa el formulario para asegurar tu lugar.</p>
         </div>
 
         <form id="registration-form">
@@ -241,22 +233,22 @@
                 <label for="nombre" class="form-label">Nombre *</label>
                 <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required class="form-input">
             </div>
-            
+
             <div class="form-group">
                 <label for="apellido" class="form-label">Apellido *</label>
                 <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required class="form-input">
             </div>
-            
+
             <div class="form-group">
                 <label for="correo" class="form-label">Correo Electrónico *</label>
                 <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="form-input">
             </div>
-            
+
             <div class="form-group">
                 <label for="telefono" class="form-label">Teléfono (Opcional)</label>
                 <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678" class="form-input">
             </div>
-            
+
             <button type="submit" id="submit-button" class="submit-button">
                 Registrarse
             </button>
@@ -270,11 +262,9 @@
     
     <script>
         // --- Configuración de Supabase ---
-        // Tus credenciales de Supabase
         const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
-        // Inicializa el cliente de Supabase usando la variable global
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // --- Lógica del formulario ---
@@ -282,7 +272,6 @@
         const statusMessage = document.getElementById('status-message');
         const submitButton = document.getElementById('submit-button');
 
-        // Función para mostrar mensajes
         function showMessage(message, type = 'success') {
             const statusMessage = document.getElementById('status-message');
             statusMessage.style.display = 'block';
@@ -290,7 +279,6 @@
             statusMessage.textContent = message;
         }
 
-        // Función para mostrar estado de carga
         function showLoading(message) {
             const statusMessage = document.getElementById('status-message');
             statusMessage.style.display = 'block';
@@ -298,7 +286,6 @@
             statusMessage.innerHTML = `<span class="loading-spinner"></span>${message}`;
         }
 
-        // Función para validar email
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
@@ -307,7 +294,6 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Deshabilitar botón y mostrar estado de carga
             submitButton.disabled = true;
             submitButton.innerHTML = '<span class="loading-spinner"></span>Registrando...';
             showLoading('Procesando tu registro, por favor espera...');
@@ -321,7 +307,6 @@
                 fecha_registro: new Date().toISOString()
             };
 
-            // Validación básica
             if (!data.nombre || !data.apellido || !data.correo) {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Registrarse';
@@ -337,7 +322,6 @@
             }
 
             try {
-                // Intentar insertar los datos en la tabla 'registros' de Supabase
                 const { error } = await supabase
                     .from('registros')
                     .insert([data]);
@@ -346,7 +330,6 @@
                     console.error('Error al registrar:', error);
                     let errorMessage = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
                     
-                    // Manejar diferentes tipos de error
                     if (error.code === '23505') {
                         errorMessage = 'Este correo electrónico ya está registrado.';
                     } else if (error.code === '42P01') {
@@ -360,7 +343,6 @@
                     showMessage('¡Registro exitoso! Gracias por registrarte.', 'success');
                     form.reset();
                     
-                    // Ocultar mensaje después de 5 segundos
                     setTimeout(() => {
                         document.getElementById('status-message').style.display = 'none';
                     }, 5000);
@@ -369,13 +351,11 @@
                 console.error('Error de conexión:', err);
                 showMessage('Error de conexión. Verifica tu internet e intenta nuevamente.', 'error');
             } finally {
-                // Rehabilitar botón
                 submitButton.disabled = false;
                 submitButton.textContent = 'Registrarse';
             }
         });
 
-        // Verificar conexión con Supabase al cargar la página
         window.addEventListener('load', async () => {
             try {
                 const { data, error } = await supabase
@@ -383,7 +363,7 @@
                     .select('count', { count: 'exact', head: true });
                 
                 if (error && error.code === '42P01') {
-                    console.warn('La tabla "registros" no existe. Asegúrate de crearla en Supabase.');
+                    console.warn('La tabla \"registros\" no existe. Asegúrate de crearla en Supabase.');
                 }
             } catch (err) {
                 console.warn('No se pudo verificar la conexión con Supabase:', err);
