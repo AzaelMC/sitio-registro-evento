@@ -4,254 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Evento</title>
+    <!-- Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Estilo base para aplicar la fuente Inter */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            /* Se establece la imagen de fondo directamente sin degradado */
-            background: url('https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/d875fa80bc26040f792ed9121b1031ef119addd1/Disen%CC%83o%20sin%20ti%CC%81tulo%20(7).jpg') no-repeat center center/cover;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            /* Se establece la imagen de fondo directamente */
+            background-image: url('https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/d875fa80bc26040f792ed9121b1031ef119addd1/Disen%CC%83o%20sin%20ti%CC%81tulo%20(7).jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
         }
-
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 500px;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            background: #fafafa;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            animation: inputFocus 0.2s ease-out;
-        }
-
-        .form-input::placeholder {
-            color: #9ca3af;
-        }
-
-        .submit-button {
-            width: 100%;
-            background: #764BA2;
-            color: #ffffff;
-            padding: 0.875rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .submit-button:hover:not(:disabled) {
-            background: #633b8a;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .submit-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .status-message {
-            text-align: center;
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            display: none;
-        }
-
-        .status-loading {
-            background: #f3f4f6;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
-        }
-
-        .status-success {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        .status-error {
-            background: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes inputFocus {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.02);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
-
-            .form-input {
-                padding: 0.625rem 0.875rem;
-            }
-
-            .submit-button {
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-            }
-        }
-
-        /* Efectos adicionales */
-        .form-input:valid {
-            border-color: #10b981;
-        }
-
-        .form-input:invalid:not(:placeholder-shown) {
-            border-color: #ef4444;
-        }
-
-        .loading-spinner {
-            display: inline-block;
+        /* Estilo para el spinner de carga */
+        .loader {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #764BA2;
+            border-radius: 50%;
             width: 16px;
             height: 16px;
-            border: 2px solid transparent;
-            border-top: 2px solid currentColor;
-            border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
         }
-
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        /* Se aumentó el tamaño del logo */
-        .logo {
-            width: 150px;
-            height: auto;
-            display: block;
-            margin: 0 auto 1rem;
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="logo-container">
-             <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del evento" class="logo">
-             <p class="text-gray-600">Completa el formulario para asegurar tu lugar.</p>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 transition-transform transform-gpu hover:scale-[1.01] duration-300">
+        <!-- Contenedor del Logo y Título -->
+        <div class="text-center mb-6">
+            <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del Evento" class="w-32 h-auto mx-auto mb-4">
+            <h1 class="text-2xl font-bold text-gray-800">Registro al Evento</h1>
+            <p class="text-gray-500 mt-1">Completa el formulario para asegurar tu lugar.</p>
         </div>
 
-        <form id="registration-form">
-            <div class="form-group">
-                <label for="nombre" class="form-label">Nombre *</label>
-                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required class="form-input">
+        <!-- Formulario de Registro -->
+        <form id="registration-form" class="space-y-5">
+            <!-- Campo Nombre -->
+            <div>
+                <label for="nombre" class="text-sm font-medium text-gray-700 block mb-1.5">Nombre *</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <div class="form-group">
-                <label for="apellido" class="form-label">Apellido *</label>
-                <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required class="form-input">
+            <!-- Campo Apellido -->
+            <div>
+                <label for="apellido" class="text-sm font-medium text-gray-700 block mb-1.5">Apellido *</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <div class="form-group">
-                <label for="correo" class="form-label">Correo Electrónico *</label>
-                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="form-input">
+            <!-- Campo Correo Electrónico -->
+            <div>
+                <label for="correo" class="text-sm font-medium text-gray-700 block mb-1.5">Correo Electrónico *</label>
+                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <div class="form-group">
-                <label for="telefono" class="form-label">Teléfono (Opcional)</label>
-                <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678" class="form-input">
+            <!-- Campo Teléfono -->
+            <div>
+                <label for="telefono" class="text-sm font-medium text-gray-700 block mb-1.5">Teléfono <span class="text-gray-400">(Opcional)</span></label>
+                <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <button type="submit" id="submit-button" class="submit-button">
+            <!-- Botón de Envío -->
+            <button type="submit" id="submit-button" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed">
                 Registrarse
             </button>
         </form>
 
-        <div id="status-message" class="status-message"></div>
+        <!-- Mensaje de Estado (Éxito, Error, Carga) -->
+        <div id="status-message" class="mt-5 text-center text-sm font-medium p-3 rounded-lg hidden"></div>
     </div>
 
-    <!-- Cargar Supabase desde CDN alternativa -->
+    <!-- Ventana Emergente de Aviso de Privacidad -->
+    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+            <h2 class="text-xl font-bold text-gray-800 mb-3">Aviso de Privacidad</h2>
+            <p class="text-gray-600 mb-5 text-sm">
+                En NTP Media valoramos y respetamos tu privacidad. La información de contacto que nos proporciones será utilizada exclusivamente para comunicarnos contigo en relación con nuestros productos, servicios y soluciones. Podrás darte de baja de nuestras comunicaciones en cualquier momento siguiendo las instrucciones incluidas en cada mensaje o solicitándolo directamente a través de nuestros canales de contacto.
+            </p>
+            <p class="text-gray-600 mb-6 text-sm">
+                Para conocer más sobre nuestras prácticas de privacidad, el uso que damos a tus datos y nuestro compromiso con la protección de tu información personal, te invitamos a consultar nuestra Política de Privacidad completa.
+            </p>
+            <button id="close-modal-button" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-2.5 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300">
+                He leído y acepto el aviso
+            </button>
+        </div>
+    </div>
+
+    <!-- Cargar cliente de Supabase desde CDN -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <script>
@@ -259,113 +105,168 @@
         const SUPABASE_URL = 'https://pisopxwisjdgglhyjfie.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpc29weHdpc2pkZ2dsaHlqZmllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMTY2NjAsImV4cCI6MjA3MjU5MjY2MH0.6BstpQGBaiFTP2MNEC0MG4TxGRie3V2zJJ2bD705gFE';
 
+        // Inicializar el cliente de Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // --- Lógica del formulario ---
+        // --- Lógica del Formulario ---
         const form = document.getElementById('registration-form');
         const statusMessage = document.getElementById('status-message');
         const submitButton = document.getElementById('submit-button');
+        const privacyModal = document.getElementById('privacy-modal');
+        const closeModalButton = document.getElementById('close-modal-button');
+        const modalContent = document.getElementById('modal-content');
 
-        function showMessage(message, type = 'success') {
-            const statusMessage = document.getElementById('status-message');
-            statusMessage.style.display = 'block';
-            statusMessage.className = `status-message status-${type}`;
-            statusMessage.textContent = message;
+        /**
+         * Muestra un mensaje de estado en la UI.
+         * @param {string} message - El mensaje a mostrar.
+         * @param {'success'|'error'|'loading'} type - El tipo de mensaje.
+         */
+        function showMessage(message, type) {
+            statusMessage.textContent = '';
+            statusMessage.innerHTML = '';
+            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-blue-100', 'text-blue-800');
+            
+            statusMessage.classList.add('block');
+
+            if (type === 'success') {
+                statusMessage.classList.add('bg-green-100', 'text-green-800');
+                statusMessage.textContent = message;
+            } else if (type === 'error') {
+                statusMessage.classList.add('bg-red-100', 'text-red-800');
+                statusMessage.textContent = message;
+            } else if (type === 'loading') {
+                statusMessage.classList.add('bg-blue-100', 'text-blue-800');
+                const spinner = document.createElement('div');
+                spinner.className = 'loader inline-block mr-2';
+                const text = document.createTextNode(message);
+                statusMessage.appendChild(spinner);
+                statusMessage.appendChild(text);
+            }
         }
 
-        function showLoading(message) {
-            const statusMessage = document.getElementById('status-message');
-            statusMessage.style.display = 'block';
-            statusMessage.className = 'status-message status-loading';
-            statusMessage.innerHTML = `<span class="loading-spinner"></span>${message}`;
-        }
-
+        /**
+         * Valida si una cadena de texto es un correo electrónico válido.
+         * @param {string} email - El correo electrónico a validar.
+         * @returns {boolean} - True si es válido, false en caso contrario.
+         */
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+            return re.test(String(email).toLowerCase());
         }
-
+        
+        // --- Manejador del evento de envío del formulario ---
         form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Evita el envío tradicional del formulario
 
+            // Deshabilitar botón y mostrar estado de carga
             submitButton.disabled = true;
-            submitButton.innerHTML = '<span class="loading-spinner"></span>Registrando...';
-            showLoading('Procesando tu registro, por favor espera...');
+            const originalButtonText = submitButton.textContent;
+            submitButton.innerHTML = `<div class="loader"></div><span class="ml-2">Registrando...</span>`;
+            showMessage('Procesando tu registro, por favor espera...', 'loading');
 
             const formData = new FormData(form);
             const data = {
                 nombre: formData.get('nombre').trim(),
                 apellido: formData.get('apellido').trim(),
                 correo: formData.get('correo').trim().toLowerCase(),
-                telefono: formData.get('telefono') ? formData.get('telefono').trim() : null,
+                // Asigna null si el teléfono está vacío
+                telefono: formData.get('telefono')?.trim() || null, 
                 fecha_registro: new Date().toISOString()
             };
 
+            // Validación de campos
             if (!data.nombre || !data.apellido || !data.correo) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrarse';
                 showMessage('Por favor completa todos los campos obligatorios.', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
                 return;
             }
 
             if (!validateEmail(data.correo)) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Registrarse';
                 showMessage('Por favor ingresa un correo electrónico válido.', 'error');
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
                 return;
             }
 
+            // Intento de inserción en Supabase
             try {
                 const { error } = await supabase
-                    .from('registros')
+                    .from('registros') // Nombre de tu tabla en Supabase
                     .insert([data]);
 
                 if (error) {
                     console.error('Error al registrar:', error);
-                    let errorMessage = 'Hubo un error en el registro. Por favor, intenta de nuevo más tarde.';
+                    let errorMessage = 'Hubo un error en el registro. Intenta de nuevo más tarde.';
                     
-                    if (error.code === '23505') {
-                        errorMessage = 'Este correo electrónico ya está registrado.';
-                    } else if (error.code === '42P01') {
-                        errorMessage = 'Error de configuración de la base de datos. Contacta al administrador.';
-                    } else if (error.message.includes('duplicate key')) {
-                        errorMessage = 'Este correo electrónico ya está registrado.';
+                    // Manejo de error específico para correo duplicado
+                    if (error.code === '23505' || error.message.includes('duplicate key')) {
+                        errorMessage = 'Este correo electrónico ya ha sido registrado.';
                     }
                     
                     showMessage(errorMessage, 'error');
                 } else {
                     showMessage('¡Registro exitoso! Gracias por registrarte.', 'success');
-                    form.reset();
+                    form.reset(); // Limpia el formulario
                     
+                    // Ocultar mensaje de éxito después de 5 segundos
                     setTimeout(() => {
-                        document.getElementById('status-message').style.display = 'none';
+                        statusMessage.classList.add('hidden');
                     }, 5000);
                 }
             } catch (err) {
                 console.error('Error de conexión:', err);
                 showMessage('Error de conexión. Verifica tu internet e intenta nuevamente.', 'error');
             } finally {
+                // Rehabilitar el botón al finalizar
                 submitButton.disabled = false;
-                submitButton.textContent = 'Registrarse';
+                submitButton.textContent = originalButtonText;
             }
         });
 
-        window.addEventListener('load', async () => {
-            try {
-                const { data, error } = await supabase
-                    .from('registros')
-                    .select('count', { count: 'exact', head: true });
-                
-                if (error && error.code === '42P01') {
-                    console.warn('La tabla \"registros\" no existe. Asegúrate de crearla en Supabase.');
-                }
-            } catch (err) {
-                console.warn('No se pudo verificar la conexión con Supabase:', err);
+        // --- Lógica de la Ventana Emergente y Carga de Página ---
+        window.addEventListener('load', () => {
+            // Lógica de la ventana emergente
+            if (!localStorage.getItem('privacyNoticeAccepted')) {
+                privacyModal.classList.remove('hidden');
+                // Pequeño retraso para la animación de entrada
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 50);
             }
+
+            // Lógica de Supabase
+            (async () => {
+                try {
+                    const { error } = await supabase
+                        .from('registros')
+                        .select('count', { count: 'exact', head: true });
+                    
+                    if (error && error.code === '42P01') {
+                        console.warn('Advertencia: La tabla "registros" no parece existir. Asegúrate de haberla creado en tu proyecto de Supabase.');
+                    }
+                } catch (err) {
+                    console.warn('No se pudo verificar la conexión con Supabase al cargar la página.', err);
+                }
+            })();
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            localStorage.setItem('privacyNoticeAccepted', 'true');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            // Esperar a que la animación termine antes de ocultar el contenedor
+            setTimeout(() => {
+                privacyModal.classList.add('hidden');
+            }, 300);
         });
     </script>
 </body>
 </html>
+
+
+
+
 
 
 
