@@ -40,7 +40,10 @@
     <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 transition-transform transform-gpu hover:scale-[1.01] duration-300">
         <!-- Contenedor del Logo y Título -->
         <div class="text-center mb-6">
-            <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del Evento" class="w-32 h-auto mx-auto mb-4">
+            <div class="flex justify-center items-center space-x-6 mb-4">
+                <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del Evento" class="h-14 w-auto">
+                <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/35d7c4305257bca1d37d85318cd0a037490ca559/DPP2025-LOGO-NEGRO-PNG.png" alt="Logo DPP 2025" class="h-16 w-auto">
+            </div>
             <p class="text-gray-500 mt-1">Completa el formulario para asegurar tu lugar.</p>
         </div>
 
@@ -58,17 +61,20 @@
                 <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <!-- Campo Correo Electrónico -->
+            <!-- Campo Correo Institucional -->
             <div>
-                <label for="correo" class="text-sm font-medium text-gray-700 block mb-1.5">Correo Electrónico *</label>
-                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                <label for="correo_institucional" class="text-sm font-medium text-gray-700 block mb-1.5">Correo Institucional *</label>
+                <input type="email" id="correo_institucional" name="correo_institucional" placeholder="nombre@institucion.edu" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
-            <!-- Campo Teléfono -->
+            <!-- Campo Usuario de Instagram -->
             <div>
-                <label for="telefono" class="text-sm font-medium text-gray-700 block mb-1.5">Teléfono <span class="text-gray-400">(Opcional)</span></label>
-                <input type="tel" id="telefono" name="telefono" placeholder="Ej. +52 55 1234 5678" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                <label for="instagram" class="text-sm font-medium text-gray-700 block mb-1.5">Usuario de Instagram <span class="text-gray-400">(Opcional)</span></label>
+                <input type="text" id="instagram" name="instagram" placeholder="Ej. @tu_usuario" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
+
+            <!-- Leyenda Promocional -->
+            <p class="text-center text-sm text-gray-600 font-medium pt-2">Regístrate y obtén un acceso a la Digital Pinshi Pary</p>
 
             <!-- Botón de Envío -->
             <button type="submit" id="submit-button" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed">
@@ -81,7 +87,7 @@
     </div>
 
     <!-- Ventana Emergente de Aviso de Privacidad -->
-    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div id="privacy-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-md flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
             <h2 class="text-xl font-bold text-gray-800 mb-3">Aviso de Privacidad</h2>
             <p class="text-gray-600 mb-5 text-sm">
@@ -167,21 +173,21 @@
             const data = {
                 nombre: formData.get('nombre').trim(),
                 apellido: formData.get('apellido').trim(),
-                correo: formData.get('correo').trim().toLowerCase(),
-                // Asigna null si el teléfono está vacío
-                telefono: formData.get('telefono')?.trim() || null, 
+                correo_institucional: formData.get('correo_institucional').trim().toLowerCase(),
+                // Asigna null si el usuario de Instagram está vacío
+                instagram: formData.get('instagram')?.trim() || null, 
                 fecha_registro: new Date().toISOString()
             };
 
             // Validación de campos
-            if (!data.nombre || !data.apellido || !data.correo) {
+            if (!data.nombre || !data.apellido || !data.correo_institucional) {
                 showMessage('Por favor completa todos los campos obligatorios.', 'error');
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
                 return;
             }
 
-            if (!validateEmail(data.correo)) {
+            if (!validateEmail(data.correo_institucional)) {
                 showMessage('Por favor ingresa un correo electrónico válido.', 'error');
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
@@ -262,6 +268,7 @@
     </script>
 </body>
 </html>
+
 
 
 
