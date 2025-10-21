@@ -42,7 +42,7 @@
         <div class="text-center mb-6">
             <div class="flex justify-center items-center space-x-6 mb-4">
                 <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/06fbeb23fe975b25bb8bda8b84217cf0fa6b1e73/logo_.png" alt="Logo del Evento" class="h-14 w-auto">
-                <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/35d7c4305257bca1d37d85318cd0a037490ca559/DPP2025-LOGO-NEGRO-PNG.png" alt="Logo DPP 2025" class="h-16 w-auto">
+                <img src="https://raw.githubusercontent.com/AzaelMC/sitio-registro-evento/35d7c4305257bca1d37d85318cd0a037490ca559/DPP2025-LOGO-NEGRO-PNG.png" alt="Logo DPP 2025" class="h-14 w-auto">
             </div>
             <p class="text-gray-500 mt-1">Completa el formulario para asegurar tu lugar.</p>
         </div>
@@ -69,8 +69,8 @@
 
             <!-- Campo Usuario de Instagram -->
             <div>
-                <label for="instagram" class="text-sm font-medium text-gray-700 block mb-1.5">Usuario de Instagram <span class="text-gray-400"></span></label>
-                <input type="text" id="instagram" name="instagram" placeholder="Ej. @tu_usuario" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                <label for="instagram" class="text-sm font-medium text-gray-700 block mb-1.5">Usuario de Instagram *</label>
+                <input type="text" id="instagram" name="instagram" placeholder="Ej. @tu_usuario" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
             </div>
 
             <!-- Leyenda Promocional -->
@@ -174,13 +174,12 @@
                 nombre: formData.get('nombre').trim(),
                 apellido: formData.get('apellido').trim(),
                 correo_institucional: formData.get('correo_institucional').trim().toLowerCase(),
-                // Asigna null si el usuario de Instagram está vacío
-                instagram: formData.get('instagram')?.trim() || null, 
+                instagram: formData.get('instagram').trim(), 
                 fecha_registro: new Date().toISOString()
             };
 
             // Validación de campos
-            if (!data.nombre || !data.apellido || !data.correo_institucional) {
+            if (!data.nombre || !data.apellido || !data.correo_institucional || !data.instagram) {
                 showMessage('Por favor completa todos los campos obligatorios.', 'error');
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
@@ -268,6 +267,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
